@@ -820,7 +820,6 @@ const modelsConfig = useMemo(
                                     scale={[1, 1, 1]}
                                     videoUrl={currentVideo}
                                     mesh ="cauhoi_1"
-                                    onClick={handleShowQuestionGame}
                                 />
                                 <ModelLoaderWithVideo
                                     path="/Farm/cauhoi_3.glb"
@@ -829,7 +828,6 @@ const modelsConfig = useMemo(
                                     scale={[1, 1, 1]}
                                     videoUrl={currentVideo3}
                                     mesh ="cauhoi_1"
-                                    onClick={handleShowQuestionGame3}
                                 />
                                 <ModelLoaderWithVideo
                                     path="/Farm/cauhoi_4.glb"
@@ -838,7 +836,6 @@ const modelsConfig = useMemo(
                                     scale={[1, 1, 1]}
                                     videoUrl={currentVideo4}
                                     mesh ="cauhoi_1"
-                                    onClick={handleShowQuestionGame4}
                                 />
                                 <ModelLoaderWithVideo
                                     path="/Farm/cauhoi_2.glb"
@@ -847,7 +844,34 @@ const modelsConfig = useMemo(
                                     scale={[1, 1, 1]}
                                     videoUrl={currentVideo2}
                                     mesh ="cauhoi_1"
+                                />
+                                <ModelAnimated2
+                                    path="/Farm/cauhoi_1.glb"
+                                    position={[-5, 1.5, -3.94693]}
+                                    rotation={[0, Math.PI, 0]}
+                                    scale={[1, 1, 1]}
+                                    onClick={handleShowQuestionGame}
+                                />
+                                <ModelAnimated2
+                                    path="/Farm/cauhoi_2.glb"
+                                    position={[2, 1.5, -3.94693]}
+                                    rotation={[0, Math.PI, 0]}
+                                    scale={[1, 1, 1]}
                                     onClick={handleShowQuestionGame2}
+                                />
+                                <ModelAnimated2
+                                    path="/Farm/cauhoi_3.glb"
+                                    position={[5, 1.5, -3.94693]}
+                                    rotation={[0, Math.PI, 0]}
+                                    scale={[1, 1, 1]}
+                                    onClick={handleShowQuestionGame3}
+                                />
+                                <ModelAnimated2
+                                    path="/Farm/cauhoi_4.glb"
+                                    position={[-2, 1.5, -3.94693]}
+                                    rotation={[0, Math.PI, 0]}
+                                    scale={[1, 1, 1]}
+                                    onClick={handleShowQuestionGame4}
                                 />
                                 {/* <ModelAnimated2
                                     path="/NTST/Game Station.glb" // Đường dẫn đến file GLB/GLTF
