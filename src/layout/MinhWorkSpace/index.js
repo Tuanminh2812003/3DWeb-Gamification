@@ -588,19 +588,19 @@ const modelsConfig = useMemo(
         // giao diện và respondsive
         // Chặn cuộn trang trên thiết bị di động
         useEffect(() => {
-            const disableScroll = (e) => {
-                // Chỉ chặn cuộn khi không có popup nào đang mở và không hiển thị hướng dẫn
-                if (!showHowToMove && !popupOpen) {
-                    e.preventDefault();
-                }
-            };
-        
-            window.addEventListener('touchmove', disableScroll, { passive: false });
-        
-            return () => {
-                window.removeEventListener('touchmove', disableScroll);
-            };
-        }, [showHowToMove, popupOpen]);
+                    const disableScroll = (e) => {
+                        // Chỉ chặn cuộn khi không có popup nào đang mở và không hiển thị hướng dẫn
+                        if (!showHowToMove && !popupOpen && !showPuzzleGame1 && !showPuzzleGame2 && !showQuestionPopup && !showQuestionPopup2 && !showQuestionPopup3 && !showQuestionPopup4) {
+                            e.preventDefault();
+                        }
+                    };
+                
+                    window.addEventListener('touchmove', disableScroll, { passive: false });
+                
+                    return () => {
+                        window.removeEventListener('touchmove', disableScroll);
+                    };
+                }, [showHowToMove, popupOpen, showPuzzleGame1, showPuzzleGame2, showQuestionPopup, showQuestionPopup2, showQuestionPopup3, showQuestionPopup4]);
         useEffect(() => {
             const handleFullscreenChange = () => {
                 setIsFullscreen(!!document.fullscreenElement);
