@@ -1,0 +1,101 @@
+
+.popUpMove__content__content__inner{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.popUpMove__content__content__inner img{
+    width: auto;
+    height: 100px;
+}
+.popUpMove__content__content__inner__text{
+    text-align: start;
+}
+.button1{
+    padding: 4px 16px !important;
+    border: solid 2px #DC9B49 !important;
+    border-radius: 100px !important;
+    color: #DC9B49 !important;
+    transition: all ease-in 0.2s !important;
+    margin-bottom: 12px !important;
+    background-color: white !important;
+}
+.button1:hover{
+    color: white !important;
+    background-color: #DC9B49 !important;
+    transition: all ease-in 0.2s !important;
+}
+.button2{
+    padding: 8px 16px !important;
+    border: solid 2px #DC9B49 !important;
+    border-radius: 100px !important;
+    color: white !important;
+    background-color: #DC9B49 !important;
+    transition: all ease-in 0.2s !important;
+    font-size: 18px;
+}
+.button2:hover{
+    color: #DC9B49 !important;
+    background-color: white !important;
+    transition: all ease-in 0.2s !important;
+}
+.minh{
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: black;
+    width: 100%;
+    height: 100%;
+}
+
+.popUpMove__content{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.popUpMove__content0{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img{
+        width: 60%;
+    }
+}
+.popUpMove__content__inner{
+    width: 48%;
+    display: flex;
+    flex-direction: column;
+}
+
+.popUpMove__content4{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: start;
+}
+.popUpMove__content5{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+@media(max-width: 970px){
+    .popUpMove__content1{
+        width: 100%;
+    }
+    .popUpMove__content2{
+        width: 100%;
+    }
+    .popUpMove__content3{
+        width: 100%;
+    }
+    .popUpMove__content4{
+        width: 100%;
+    }
+}
