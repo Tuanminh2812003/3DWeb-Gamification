@@ -227,25 +227,25 @@ const PuzzleGame = ({ onComplete }) => {
   // );
 
   const [isComplete, setIsComplete] = useState(false);
-  const [countdown, setCountdown] = useState(1); // Đếm ngược từ 6 giây
-
-  useEffect(() => {
-    if (isComplete) {
-      const interval = setInterval(() => {
-        setCountdown((prev) => prev - 1);
-      }, 1000);
-
-      const timeout = setTimeout(() => {
-        clearInterval(interval);
-        onComplete(); // Gọi callback để tắt pop-up sau 6 giây
-      }, 100);
-
-      return () => {
-        clearInterval(interval);
-        clearTimeout(timeout);
-      };
-    }
-  }, [isComplete, onComplete]);
+  const [countdown, setCountdown] = useState(6); // Đếm ngược từ 6 giây
+  
+    useEffect(() => {
+      if (isComplete) {
+        const interval = setInterval(() => {
+          setCountdown((prev) => prev - 1);
+        }, 1000);
+  
+        const timeout = setTimeout(() => {
+          clearInterval(interval);
+          onComplete(); // Gọi callback để tắt pop-up sau 6 giây
+        }, 800);
+  
+        return () => {
+          clearInterval(interval);
+          clearTimeout(timeout);
+        };
+      }
+    }, [isComplete, onComplete]);
 
   return (
     <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
@@ -257,7 +257,7 @@ const PuzzleGame = ({ onComplete }) => {
           <div
             style={{
               position: 'fixed',
-              top: '50%',
+              top: '80%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
               background: 'white',
@@ -269,7 +269,7 @@ const PuzzleGame = ({ onComplete }) => {
             }}
           >
             <h2>Ghép hình thành công</h2>
-            <div>Màn hình sẽ quay lại không gian trong vòng {countdown} giây.</div>
+            <div>Màn hình sẽ quay lại không gian trong vòng vài giây.</div>
           </div>
         )}
       </div>
