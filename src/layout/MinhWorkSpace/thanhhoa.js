@@ -115,6 +115,11 @@ const modelsConfig = useMemo(
         const [currentModelPath1, setCurrentModelPath1] = useState("/Farm/manhghep.001.glb"); 
         const [showPuzzleGame2, setShowPuzzleGame2] = useState(false);
         const [currentModelPath2, setCurrentModelPath2] = useState("/Farm/manhghep.002.glb"); 
+
+        const [currentModelPath3, setCurrentModelPath3] = useState("/Farm/cauhoi_1.glb"); 
+        const [currentModelPath4, setCurrentModelPath4] = useState("/Farm/cauhoi_2.glb"); 
+        const [currentModelPath5, setCurrentModelPath5] = useState("/Farm/cauhoi_3.glb"); 
+        const [currentModelPath6, setCurrentModelPath6] = useState("/Farm/cauhoi_4.glb"); 
         const [showGamePopup, setShowGamePopup] = useState(false); // 🔥 State kiểm soát popup game
 
         const [showQuestionPopup, setShowQuestionPopup] = useState(false);
@@ -191,6 +196,7 @@ const modelsConfig = useMemo(
                 if (isCorrect) {
                     setdem(dem + 1);
                     setCurrentVideo(""); // Ẩn video khi trả lời đúng
+                    setCurrentModelPath3("/Farm/done.glb");
                 }
             }
           };
@@ -204,8 +210,10 @@ const modelsConfig = useMemo(
                 if (isCorrect) {
                     setdem(dem + 1);
                     setCurrentVideo2(""); // Ẩn video khi trả lời đúng
+                    setCurrentModelPath4("/Farm/done.glb");
                 }
             }
+        
           };
           const handleShowQuestionGame3 = () => {
             setShowQuestionPopup3(true); // Hiển thị popup câu hỏi
@@ -217,8 +225,10 @@ const modelsConfig = useMemo(
                 if (isCorrect) {
                     setdem(dem + 1);
                     setCurrentVideo3(""); // Ẩn video khi trả lời đúng
+                    setCurrentModelPath5("/Farm/done.glb");
                 }
             }
+            
           };
           const handleShowQuestionGame4 = () => {
             setShowQuestionPopup4(true); // Hiển thị popup câu hỏi
@@ -230,8 +240,10 @@ const modelsConfig = useMemo(
                 if (isCorrect) {
                     setdem(dem + 1);
                     setCurrentVideo4(""); // Ẩn video khi trả lời đúng
+                    setCurrentModelPath6("/Farm/done.glb");
                 }
             }
+            
           };
 
         useEffect(() => {
@@ -813,15 +825,15 @@ const modelsConfig = useMemo(
                                     videoUrl="/NTST/VR Gallery.mp4"
                                     mesh ="TV_Screen001"
                                 /> */}
-                                <ModelLoaderWithVideo
+                                {/* <ModelLoaderWithVideo
                                     path="/Farm/cauhoi_1.glb"
                                     position={[-5, 1.5, -3.94693]}
                                     rotation={[0, Math.PI, 0]}
                                     scale={[1, 1, 1]}
                                     videoUrl={currentVideo}
                                     mesh ="cauhoi_1"
-                                />
-                                <ModelLoaderWithVideo
+                                /> */}
+                                {/* <ModelLoaderWithVideo
                                     path="/Farm/cauhoi_3.glb"
                                     position={[2, 1.5, -3.94693]}
                                     rotation={[0, Math.PI, 0]}
@@ -844,30 +856,30 @@ const modelsConfig = useMemo(
                                     scale={[1, 1, 1]}
                                     videoUrl={currentVideo2}
                                     mesh ="cauhoi_1"
-                                />
+                                /> */}
                                 <ModelAnimated2
-                                    path="/Farm/cauhoi_1.glb"
+                                    path={currentModelPath3}
                                     position={[-5, 1.5, -3.94693]}
                                     rotation={[0, Math.PI, 0]}
                                     scale={[1, 1, 1]}
                                     onClick={handleShowQuestionGame}
                                 />
                                 <ModelAnimated2
-                                    path="/Farm/cauhoi_2.glb"
+                                    path={currentModelPath4}
                                     position={[2, 1.5, -3.94693]}
                                     rotation={[0, Math.PI, 0]}
                                     scale={[1, 1, 1]}
                                     onClick={handleShowQuestionGame2}
                                 />
                                 <ModelAnimated2
-                                    path="/Farm/cauhoi_3.glb"
+                                    path={currentModelPath5}
                                     position={[5, 1.5, -3.94693]}
                                     rotation={[0, Math.PI, 0]}
                                     scale={[1, 1, 1]}
                                     onClick={handleShowQuestionGame3}
                                 />
                                 <ModelAnimated2
-                                    path="/Farm/cauhoi_4.glb"
+                                    path={currentModelPath6}
                                     position={[-2, 1.5, -3.94693]}
                                     rotation={[0, Math.PI, 0]}
                                     scale={[1, 1, 1]}
