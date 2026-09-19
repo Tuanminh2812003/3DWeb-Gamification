@@ -1,50 +1,194 @@
-import React, { useRef } from "react";
-import { useFrame, useLoader } from "@react-three/fiber";
-import { TextureLoader } from "three";
+import React, {
+    useMemo,
+    useRef,
+} from "react";
 
-export default function Particles({ texturePath, position, scale, rotation }) {
-    const particlesRef = useRef();
-    const particleCount = 500;
-    const particlePositions = new Float32Array(particleCount * 3);
+import {
+    useFrame,
+    useLoader,
+} from "@react-three/fiber";
 
-    // Load the texture from the provided path
-    const particleTexture = useLoader(TextureLoader, texturePath);
+import {
+    TextureLoader,
+    AdditiveBlending,
+    NormalBlending,
+} from "three";
 
-    // Generate random positions for particles
-    for (let i = 0; i < particleCount; i++) {
-        particlePositions[i * 3] = ((Math.random() - 0.5) * 70) ; // Scale X
-        particlePositions[i * 3 + 1] = ((Math.random() - 0.5) * 40) ; // Scale Y
-        particlePositions[i * 3 + 2] = ((Math.random() - 0.5) * 70)  // Scale Z
-    }
 
-    // Rotate particles on each frame for dynamic effect
-    useFrame(() => {
-        if (particlesRef.current) {
-            particlesRef.current.rotation.y += 0.002;
+export default function Particles({
+    texturePath,
+
+    position = [0, 0, 0],
+
+    rotation = [0, 0, 0],
+
+    scale,
+
+    size = 0.2,
+
+    count = 500,
+
+    area = [70, 40, 70],
+
+    opacity = 1,
+
+    color,
+
+    speed = 0.002,
+
+    additive = false,
+}) {
+
+    const particlesRef =
+        useRef();
+
+    const particleTexture =
+        useLoader(
+            TextureLoader,
+            texturePath
+        );
+
+
+    const finalSize =
+        scale !== undefined
+            ? scale
+            : size;
+
+
+    const particlePositions =
+        useMemo(() => {
+
+            const positions =
+                new Float32Array(
+                    count * 3
+                );
+
+
+            for (
+                let i = 0;
+                i < count;
+                i++
+            ) {
+
+                positions[i * 3] =
+                    (Math.random() - 0.5)
+                    * area[0];
+
+
+                positions[i * 3 + 1] =
+                    (Math.random() - 0.5)
+                    * area[1];
+
+
+                positions[i * 3 + 2] =
+                    (Math.random() - 0.5)
+                    * area[2];
+
+            }
+
+
+            return positions;
+
+        }, [
+            count,
+            area[0],
+            area[1],
+            area[2],
+        ]);
+
+
+    useFrame(
+        (_, delta) => {
+
+            if (
+                !particlesRef.current
+            ) return;
+
+
+            particlesRef.current
+                .rotation.y +=
+                speed
+                * delta
+                * 60;
+
         }
-    });
+    );
+
 
     return (
+
         <points
             ref={particlesRef}
+
             position={position}
+
             rotation={rotation}
+
+            frustumCulled={false}
         >
+
             <bufferGeometry>
+
                 <bufferAttribute
                     attach="attributes-position"
-                    count={particleCount}
-                    array={particlePositions}
+
+                    count={count}
+
+                    array={
+                        particlePositions
+                    }
+
                     itemSize={3}
                 />
+
             </bufferGeometry>
+
+
             <pointsMaterial
-                map={particleTexture} // Texture của particle
-                size={scale} // Kích thước của particle
-                transparent={true} // Bật tính năng trong suốt
-                alphaTest={0.5} // Giúp loại bỏ các vùng trong suốt có giá trị alpha thấp
-                depthWrite={false} // Ngăn chặn vấn đề với xếp chồng particle
+
+                map={
+                    particleTexture
+                }
+
+                size={
+                    finalSize
+                }
+
+                /* Không truyền color
+                   => giữ màu texture gốc */
+
+                {...(
+                    color
+                        ? { color }
+                        : {}
+                )}
+
+                transparent
+
+                opacity={
+                    opacity
+                }
+
+                alphaTest={
+                    0.08
+                }
+
+                depthWrite={
+                    false
+                }
+
+                sizeAttenuation
+
+                blending={
+                    additive
+                        ? AdditiveBlending
+                        : NormalBlending
+                }
+
             />
+
         </points>
+
     );
+
 }

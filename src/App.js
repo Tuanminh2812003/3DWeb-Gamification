@@ -28,13 +28,16 @@ function App() {
       <TimeProvider>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-            <Route path='/hanoi' element={<MinhWorkSpace/>}/>
+            {/* <Route path='/hanoi' element={<MinhWorkSpace/>}/>
             <Route path='/' element={<PhuTho/>}/>
             <Route path='/ninhbinh' element={<NinhBinh/>}/>
             <Route path='/thanhhoa' element={<ThanhHoa/>}/>
             <Route path='/hue' element={<Hue/>}/>
             <Route path='/home' element={<Home/>}/>
-            <Route path='/hieu' element={<Hieuworkspace/>}/>
+            <Route path='/hieu' element={<Hieuworkspace/>}/> */}
+
+            <Route path='/' element={<MinhWorkSpace/>}/>
+             <Route path='/ninhbinh' element={<NinhBinh/>}/>
           </Routes>
         </Suspense>
       </TimeProvider>

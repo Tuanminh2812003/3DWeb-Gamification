@@ -1,0 +1,592 @@
+html,
+body,
+#root {
+    margin: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    background: #010509;
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.thap-rua-showcase {
+    width: 100vw;
+    height: 100vh;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% 42%,
+            #0a2028 0%,
+            #041017 38%,
+            #010509 78%
+        );
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+
+.thap-rua-showcase canvas {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 1;
+}
+
+
+/* =====================================================
+   VIGNETTE
+===================================================== */
+
+.scene-vignette {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 2;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            ellipse at 50% 78%,
+            rgba(59, 152, 164, 0.055) 0%,
+            rgba(22, 89, 104, 0.025) 22%,
+            transparent 48%
+        ),
+
+        radial-gradient(
+            ellipse at 50% 43%,
+            transparent 0%,
+            transparent 30%,
+            rgba(0, 0, 0, 0.05) 50%,
+            rgba(0, 0, 0, 0.30) 82%,
+            rgba(0, 0, 0, 0.62) 115%
+        ),
+
+        linear-gradient(
+            to bottom,
+            rgba(0, 5, 10, 0.24) 0%,
+            transparent 24%,
+            transparent 66%,
+            rgba(0, 3, 6, 0.40) 100%
+        );
+}
+
+
+/* =====================================================
+   TOP HAZE
+===================================================== */
+
+.scene-top-haze {
+    position: absolute;
+
+    pointer-events: none;
+
+    z-index: 3;
+
+    left: 0;
+    right: 0;
+    top: 0;
+
+    height: 32%;
+
+    opacity: 0.18;
+
+    background:
+        radial-gradient(
+            ellipse at 50% -20%,
+            rgba(83, 173, 193, 0.14) 0%,
+            rgba(29, 83, 102, 0.04) 38%,
+            transparent 68%
+        );
+
+    filter: blur(18px);
+
+    animation:
+        topHazePulse
+        10s
+        ease-in-out
+        infinite alternate;
+}
+
+
+@keyframes topHazePulse {
+    from {
+        opacity: 0.13;
+
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0.22;
+
+        transform: scale(1.035);
+    }
+}
+
+
+/* =====================================================
+   INFO PANEL
+===================================================== */
+
+.thap-rua-info {
+    position: absolute;
+
+    left: clamp(
+        24px,
+        3vw,
+        56px
+    );
+
+    bottom: clamp(
+        30px,
+        5vh,
+        58px
+    );
+
+    z-index: 10;
+
+    /*
+        Không giới hạn chiều rộng,
+        để title dài vẫn nằm một dòng.
+    */
+    width: auto;
+    max-width: none;
+
+    color: white;
+
+    pointer-events: none;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   SUBTITLE
+===================================================== */
+
+.thap-rua-subtitle {
+    margin:
+        0
+        0
+        14px
+        2px;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size:
+        clamp(
+            8px,
+            0.6vw,
+            10px
+        );
+
+    font-weight: 500;
+
+    line-height: 1;
+
+    letter-spacing:
+        clamp(
+            4px,
+            0.5vw,
+            7px
+        );
+
+    color:
+        rgba(
+            164,
+            219,
+            223,
+            0.7
+        );
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   TITLE
+===================================================== */
+
+.thap-rua-title {
+    display: block;
+
+    width: auto;
+    max-width: none;
+
+    margin: 0;
+    padding: 0;
+
+    /*
+        Times New Roman render tiếng Việt ổn hơn
+        Georgia trong trường hợp của bạn.
+    */
+    font-family:
+        "Times New Roman",
+        Times,
+        serif;
+
+    /*
+        Title dài vẫn cố nằm một dòng.
+        Nếu viewport nhỏ thì clamp sẽ giảm cỡ chữ.
+    */
+    font-size:
+        clamp(
+            30px,
+            3.15vw,
+            58px
+        );
+
+    font-weight: 400;
+
+    line-height: 1;
+
+    letter-spacing: 0;
+
+    color:
+        rgba(
+            244,
+            248,
+            247,
+            0.96
+        );
+
+    /*
+        QUAN TRỌNG:
+        không cho xuống dòng.
+    */
+    white-space: nowrap !important;
+
+    word-break: normal !important;
+
+    overflow-wrap: normal !important;
+
+    hyphens: none !important;
+
+    text-wrap: nowrap;
+
+    font-kerning: normal;
+
+    font-feature-settings: normal;
+
+    text-rendering:
+        optimizeLegibility;
+
+    text-shadow:
+        0
+        8px
+        35px
+        rgba(
+            0,
+            0,
+            0,
+            0.85
+        );
+}
+
+
+/* =====================================================
+   TITLE NGẮN
+   Ví dụ: THÁP RÙA
+===================================================== */
+
+.thap-rua-title.short-title {
+    font-size:
+        clamp(
+            42px,
+            5vw,
+            82px
+        );
+
+    letter-spacing: 2px;
+}
+
+
+/* =====================================================
+   TITLE DÀI
+   Ví dụ:
+   Bia Tiến sĩ Văn Miếu - Quốc Tử Giám
+===================================================== */
+
+.thap-rua-title.long-title {
+    font-size:
+        clamp(
+            28px,
+            3vw,
+            54px
+        );
+
+    line-height: 1;
+
+    letter-spacing: 0;
+}
+
+
+/* =====================================================
+   LINE
+===================================================== */
+
+.thap-rua-line {
+    width: 96px;
+
+    height: 1px;
+
+    margin-top: 24px;
+    margin-bottom: 16px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(225, 188, 107, 0.95),
+            rgba(105, 205, 211, 0.38),
+            transparent
+        );
+}
+
+
+/* =====================================================
+   DESCRIPTION
+===================================================== */
+
+.thap-rua-info p {
+    margin: 0;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    line-height: 1.4;
+
+    letter-spacing: 2.6px;
+
+    text-transform: uppercase;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.43
+        );
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   HELP
+===================================================== */
+
+.thap-rua-help {
+    position: absolute;
+
+    right: 40px;
+    bottom: 40px;
+
+    z-index: 10;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+    text-align: right;
+
+    pointer-events: none;
+}
+
+
+.thap-rua-help span {
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 9px;
+
+    line-height: 1.3;
+
+    letter-spacing: 2px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.28
+        );
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (
+    max-width: 1100px
+) {
+
+    .thap-rua-info {
+        left: 26px;
+        bottom: 34px;
+    }
+
+    .thap-rua-title {
+        max-width: none;
+
+        white-space:
+            nowrap
+            !important;
+    }
+
+    .thap-rua-title.short-title {
+        font-size:
+            clamp(
+                38px,
+                5vw,
+                62px
+            );
+    }
+
+    .thap-rua-title.long-title {
+        font-size:
+            clamp(
+                25px,
+                3.5vw,
+                43px
+            );
+    }
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (
+    max-width: 768px
+) {
+
+    .thap-rua-info {
+        left: 20px;
+        bottom: 26px;
+
+        width: auto;
+        max-width: none;
+    }
+
+    .thap-rua-title {
+        width: auto;
+
+        max-width: none;
+
+        white-space:
+            nowrap
+            !important;
+
+        letter-spacing: 0;
+    }
+
+    .thap-rua-title.short-title {
+        font-size:
+            clamp(
+                32px,
+                8vw,
+                46px
+            );
+    }
+
+    .thap-rua-title.long-title {
+        font-size:
+            clamp(
+                20px,
+                4.8vw,
+                32px
+            );
+    }
+
+    .thap-rua-subtitle {
+        font-size: 8px;
+
+        letter-spacing: 3px;
+    }
+
+    .thap-rua-info p {
+        font-size: 8px;
+
+        letter-spacing: 2px;
+    }
+
+    .thap-rua-help {
+        display: none;
+    }
+}
+
+
+/* =====================================================
+   MOBILE NHỎ
+===================================================== */
+
+@media (
+    max-width: 480px
+) {
+
+    .thap-rua-info {
+        left: 16px;
+        bottom: 20px;
+    }
+
+    .thap-rua-title.short-title {
+        font-size: 31px;
+    }
+
+    .thap-rua-title.long-title {
+        /*
+            Phải nhỏ hơn khá nhiều để title dài
+            vẫn giữ đúng 1 dòng.
+        */
+        font-size: 18px;
+    }
+
+    .thap-rua-subtitle {
+        margin-bottom: 10px;
+
+        letter-spacing: 2.5px;
+    }
+
+    .thap-rua-line {
+        margin-top: 16px;
+        margin-bottom: 12px;
+
+        width: 70px;
+    }
+}
