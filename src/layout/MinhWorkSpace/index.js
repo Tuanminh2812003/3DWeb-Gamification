@@ -21,6 +21,9 @@ import {
 import * as THREE
     from "three";
 
+import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader";
+import { useThree } from "@react-three/fiber";
+
 import Particles
     from "../../components/Particles/index";
 
@@ -37,18 +40,45 @@ const MODEL_Y_OFFSET = 0.4;
 ========================================================= */
 
 function ThapRuaModel() {
-    const { scene } =
-        useGLTF(
-            "/Farm/md_rua.glb"
-        );
+
+    const gl = useThree(
+        (state) => state.gl
+    );
+
+    const { scene } = useGLTF(
+        "/Farm/md_rua.glb",
+
+        true, // Draco
+
+        true, // MeshOpt
+
+        (loader) => {
+
+            const ktx2Loader =
+                new KTX2Loader();
+
+            ktx2Loader
+                .setTranscoderPath(
+                    "/basis/"
+                )
+                .detectSupport(gl);
+
+            loader.setKTX2Loader(
+                ktx2Loader
+            );
+        }
+    );
+
 
     const model =
         useMemo(() => {
+
             const clone =
                 scene.clone(true);
 
             clone.traverse(
                 (child) => {
+
                     if (
                         !child.isMesh
                     ) return;
@@ -70,9 +100,9 @@ function ThapRuaModel() {
 
                     materials.forEach(
                         (mat) => {
-                            if (
-                                !mat
-                            ) return;
+
+                            if (!mat)
+                                return;
 
                             mat.envMapIntensity =
                                 0.55;
@@ -85,7 +115,6 @@ function ThapRuaModel() {
                                     Math.max(
                                         mat.roughness
                                         ?? 0.65,
-
                                         0.62
                                     );
                             }
@@ -98,7 +127,6 @@ function ThapRuaModel() {
                                     Math.min(
                                         mat.metalness
                                         ?? 0,
-
                                         0.05
                                     );
                             }
@@ -111,10 +139,14 @@ function ThapRuaModel() {
             );
 
             return clone;
+
         }, [scene]);
 
+
     return (
+
         <Center
+
             position={[
                 0,
 
@@ -124,14 +156,14 @@ function ThapRuaModel() {
                 0,
             ]}
         >
-            <primitive
-                object={
-                    model
-                }
 
+            <primitive
+                object={model}
                 scale={1.6}
             />
+
         </Center>
+
     );
 }
 
@@ -1429,8 +1461,3 @@ export default function ThapRuaShowcase() {
         </div>
     );
 }
-
-
-useGLTF.preload(
-    "/Farm/md_rua.glb"
-);
