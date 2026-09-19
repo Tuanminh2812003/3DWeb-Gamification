@@ -15,7 +15,6 @@ import { useState } from "react";
 import WebLine from "../../Components/WebLine";
 import { useNavigate } from "react-router-dom";
 import sections from "../../constants/data";
-import { FaBars } from "react-icons/fa";
 
 function LayoutDefault(){
     const [showModalRegister, setShowModalRegister] = useState(false);

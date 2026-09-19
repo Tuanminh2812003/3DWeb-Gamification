@@ -230,7 +230,6 @@ function Home(){
                         </div>
                     </div>
                 </div>
-                <Home_Section2/>
             </div>
         </>
     )
