@@ -3,7 +3,14 @@ import React, {
     useMemo,
     useRef,
     useEffect,
+    useState,
 } from "react";
+
+import {
+    Dialog,
+    DialogContent,
+    IconButton,
+} from "@mui/material";
 
 import {
     Canvas,
@@ -39,132 +46,221 @@ const MODEL_Y_OFFSET = 0.4;
     MODEL
 ========================================================= */
 
-function ThapRuaModel() {
 
-    const gl = useThree(
-        (state) => state.gl
-    );
+function ThapRuaModel({ onClick }) {
+    const gl = useThree((state) => state.gl);
+
+    const modelRef = useRef();
+    const hoveredRef = useRef(false);
 
     const { scene } = useGLTF(
         "/Farm/md_rua.glb",
-
-        true, // Draco
-
-        true, // MeshOpt
-
+        true,
+        true,
         (loader) => {
-
-            const ktx2Loader =
-                new KTX2Loader();
+            const ktx2Loader = new KTX2Loader();
 
             ktx2Loader
-                .setTranscoderPath(
-                    "/basis/"
-                )
+                .setTranscoderPath("/basis/")
                 .detectSupport(gl);
 
-            loader.setKTX2Loader(
-                ktx2Loader
-            );
+            loader.setKTX2Loader(ktx2Loader);
         }
     );
 
+    const model = useMemo(() => {
+        const clone = scene.clone(true);
 
-    const model =
-        useMemo(() => {
+        clone.traverse((child) => {
+            if (!child.isMesh) return;
 
-            const clone =
-                scene.clone(true);
+            child.castShadow = true;
+            child.receiveShadow = true;
 
-            clone.traverse(
-                (child) => {
+            /*
+                QUAN TRỌNG:
+                clone material để hover không ảnh hưởng
+                material gốc của GLTF
+            */
+            if (Array.isArray(child.material)) {
+                child.material = child.material.map((mat) =>
+                    mat ? mat.clone() : mat
+                );
+            } else if (child.material) {
+                child.material = child.material.clone();
+            }
 
-                    if (
-                        !child.isMesh
-                    ) return;
+            const materials = Array.isArray(child.material)
+                ? child.material
+                : [child.material];
 
-                    child.castShadow =
-                        true;
+            materials.forEach((mat) => {
+                if (!mat) return;
 
-                    child.receiveShadow =
-                        true;
+                mat.envMapIntensity = 0.55;
 
-                    const materials =
-                        Array.isArray(
-                            child.material
-                        )
-                            ? child.material
-                            : [
-                                child.material
-                            ];
-
-                    materials.forEach(
-                        (mat) => {
-
-                            if (!mat)
-                                return;
-
-                            mat.envMapIntensity =
-                                0.55;
-
-                            if (
-                                "roughness"
-                                in mat
-                            ) {
-                                mat.roughness =
-                                    Math.max(
-                                        mat.roughness
-                                        ?? 0.65,
-                                        0.62
-                                    );
-                            }
-
-                            if (
-                                "metalness"
-                                in mat
-                            ) {
-                                mat.metalness =
-                                    Math.min(
-                                        mat.metalness
-                                        ?? 0,
-                                        0.05
-                                    );
-                            }
-
-                            mat.needsUpdate =
-                                true;
-                        }
+                if ("roughness" in mat) {
+                    mat.roughness = Math.max(
+                        mat.roughness ?? 0.65,
+                        0.62
                     );
                 }
-            );
 
-            return clone;
+                if ("metalness" in mat) {
+                    mat.metalness = Math.min(
+                        mat.metalness ?? 0,
+                        0.05
+                    );
+                }
 
-        }, [scene]);
+                /*
+                    Lưu trạng thái emissive ban đầu
+                    để restore khi bỏ hover
+                */
+                if (mat.emissive) {
+                    mat.userData.originalEmissive =
+                        mat.emissive.clone();
+
+                    mat.userData.originalEmissiveIntensity =
+                        mat.emissiveIntensity ?? 1;
+                }
+
+                mat.needsUpdate = true;
+            });
+
+            /*
+                Tắt raycast trên mesh thật.
+
+                Hover/click sẽ do hitbox bên dưới xử lý,
+                tránh raycast hàng trăm mesh.
+            */
+            child.raycast = () => null;
+        });
+
+        return clone;
+    }, [scene]);
+
+
+
+    /* =====================================================
+        HOVER EFFECT
+    ===================================================== */
+
+    const setModelHover = (hovered) => {
+        if (hoveredRef.current === hovered) {
+            return;
+        }
+
+        hoveredRef.current = hovered;
+
+        document.body.style.cursor =
+            hovered ? "pointer" : "default";
+
+        if (!modelRef.current) {
+            return;
+        }
+
+        modelRef.current.traverse((child) => {
+            if (!child.isMesh) return;
+
+            const materials = Array.isArray(child.material)
+                ? child.material
+                : [child.material];
+
+            materials.forEach((mat) => {
+                if (!mat) return;
+
+                if (mat.emissive) {
+                    if (hovered) {
+                        /*
+                            Ánh sáng nhẹ khi hover.
+
+                            Có thể chỉnh màu và intensity
+                            ở đây.
+                        */
+                        mat.emissive.set("#6fc4d0");
+                        mat.emissiveIntensity = 0.13;
+                    } else {
+                        /*
+                            Trả lại material ban đầu
+                        */
+                        if (
+                            mat.userData.originalEmissive
+                        ) {
+                            mat.emissive.copy(
+                                mat.userData.originalEmissive
+                            );
+                        }
+
+                        mat.emissiveIntensity =
+                            mat.userData
+                                .originalEmissiveIntensity ??
+                            1;
+                    }
+                }
+            });
+        });
+    };
+
 
 
     return (
-
+    <group>
+        {/* MODEL */}
         <Center
-
             position={[
                 0,
-
-                SCENE_Y_OFFSET
-                    + MODEL_Y_OFFSET,
-
+                SCENE_Y_OFFSET + MODEL_Y_OFFSET,
                 0,
             ]}
         >
-
             <primitive
+                ref={modelRef}
                 object={model}
                 scale={1.6}
             />
-
         </Center>
 
-    );
+
+        {/* HITBOX RIÊNG - KHÔNG ẢNH HƯỞNG CENTER */}
+        <mesh
+            position={[
+                0,
+                SCENE_Y_OFFSET + MODEL_Y_OFFSET + 0.15,
+                0,
+            ]}
+
+            scale={[
+                2.0,
+                2.3,
+                1.8,
+            ]}
+
+            onPointerEnter={(event) => {
+                event.stopPropagation();
+                setModelHover(true);
+            }}
+
+            onPointerLeave={(event) => {
+                event.stopPropagation();
+                setModelHover(false);
+            }}
+
+            onClick={(event) => {
+                event.stopPropagation();
+                onClick?.();
+            }}
+        >
+            <boxGeometry args={[1, 1, 1]} />
+
+            <meshBasicMaterial
+                transparent
+                opacity={0}
+                depthWrite={false}
+            />
+        </mesh>
+    </group>
+);
 }
 
 
@@ -1068,7 +1164,7 @@ function MysticalParticles() {
     SCENE
 ========================================================= */
 
-function Scene() {
+function Scene({ onModelClick }) {
     return (
         <>
             <color
@@ -1115,7 +1211,7 @@ function Scene() {
 
             <RotatingMist />
 
-            <ThapRuaModel />
+            <ThapRuaModel onClick={onModelClick} />
 
             <ContactShadows
                 position={[
@@ -1297,73 +1393,103 @@ function EnergyRing() {
 export default function ThapRuaShowcase() {
     const backgroundAudioRef = useRef(null);
 
+    const [openPoster, setOpenPoster] =
+    useState(false);
 
     useEffect(() => {
+    const audio = new Audio(
+        "/Farm/Music/vanmieu.mp4"
+    );
 
-        const audio = new Audio(
-            "/Farm/Music/vanmieu.mp4"
-        );
+    audio.loop = true;
+    audio.volume = 0.45;
 
-        audio.loop = true;
+    backgroundAudioRef.current = audio;
 
-        // chỉnh âm lượng ở đây
-        audio.volume = 0.45;
+    const playAudio = () => {
+        if (!audio.paused) return;
 
-        backgroundAudioRef.current =
-            audio;
+        audio.play().catch(() => {});
+    };
 
+    // thử ngay
+    playAudio();
 
-        const playAudio = () => {
+    const unlockAudio = () => {
+        playAudio();
 
-            audio
-                .play()
-                .catch((error) => {
-
-                    console.warn(
-                        "Không thể phát nhạc:",
-                        error
-                    );
-
-                });
-
-        };
-
-
-        /*
-            Trình duyệt chặn autoplay có tiếng,
-            nên click/touch lần đầu sẽ kích hoạt nhạc.
-        */
-
-        window.addEventListener(
+        window.removeEventListener(
             "pointerdown",
-            playAudio,
-            {
-                once: true,
-            }
+            unlockAudio
         );
 
+        window.removeEventListener(
+            "touchstart",
+            unlockAudio
+        );
 
-        return () => {
+        window.removeEventListener(
+            "keydown",
+            unlockAudio
+        );
 
-            window.removeEventListener(
-                "pointerdown",
-                playAudio
-            );
+        window.removeEventListener(
+            "wheel",
+            unlockAudio
+        );
+    };
 
+    window.addEventListener(
+        "pointerdown",
+        unlockAudio
+    );
 
-            audio.pause();
+    window.addEventListener(
+        "touchstart",
+        unlockAudio
+    );
 
-            audio.currentTime = 0;
+    window.addEventListener(
+        "keydown",
+        unlockAudio
+    );
 
-            backgroundAudioRef.current =
-                null;
+    window.addEventListener(
+        "wheel",
+        unlockAudio
+    );
 
-        };
+    return () => {
+        window.removeEventListener(
+            "pointerdown",
+            unlockAudio
+        );
 
-    }, []);
+        window.removeEventListener(
+            "touchstart",
+            unlockAudio
+        );
+
+        window.removeEventListener(
+            "keydown",
+            unlockAudio
+        );
+
+        window.removeEventListener(
+            "wheel",
+            unlockAudio
+        );
+
+        audio.pause();
+        audio.currentTime = 0;
+
+        backgroundAudioRef.current = null;
+    };
+}, []);
 
     return (
         
+
         <div
             className={
                 "thap-rua-showcase"
@@ -1413,7 +1539,7 @@ export default function ThapRuaShowcase() {
                         null
                     }
                 >
-                    <Scene />
+                    <Scene onModelClick={() => setOpenPoster(true)} />
                 </Suspense>
             </Canvas>
 
@@ -1458,6 +1584,96 @@ export default function ThapRuaShowcase() {
                     SCROLL · PHÓNG TO
                 </span>
             </div>
+
+            <Dialog
+    open={openPoster}
+    onClose={() =>
+        setOpenPoster(false)
+    }
+    maxWidth="lg"
+    PaperProps={{
+        sx: {
+            background:
+                "rgba(3, 10, 15, 0.96)",
+
+            boxShadow:
+                "0 20px 80px rgba(0,0,0,0.8)",
+
+            border:
+                "1px solid rgba(120, 200, 210, 0.18)",
+
+            borderRadius:
+                "4px",
+
+            overflow:
+                "hidden",
+        },
+    }}
+>
+    <DialogContent
+        sx={{
+            position:
+                "relative",
+
+            padding:
+                "12px !important",
+
+            background:
+                "#02090d",
+        }}
+    >
+        <IconButton
+    onClick={() => setOpenPoster(false)}
+    sx={{
+        position: "absolute",
+        top: 18,
+        right: 18,
+        zIndex: 10,
+
+        width: 42,
+        height: 42,
+
+        color: "#ffffff",
+        background: "rgba(0,0,0,0.55)",
+
+        fontSize: "30px",
+        fontWeight: 300,
+        lineHeight: 1,
+
+        "&:hover": {
+            background: "rgba(0,0,0,0.8)",
+        },
+    }}
+>
+    ×
+</IconButton>
+
+        <img
+            src="/Farm/ImageInfo/md_poster.png"
+            alt="Thông tin Bia Tiến sĩ Văn Miếu - Quốc Tử Giám"
+
+            style={{
+                display:
+                    "block",
+
+                width:
+                    "100%",
+
+                maxWidth:
+                    "1100px",
+
+                maxHeight:
+                    "88vh",
+
+                objectFit:
+                    "contain",
+
+                margin:
+                    "0 auto",
+            }}
+        />
+    </DialogContent>
+</Dialog>
         </div>
     );
 }
