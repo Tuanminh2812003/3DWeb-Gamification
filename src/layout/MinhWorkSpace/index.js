@@ -1569,6 +1569,9 @@ export default function ThapRuaShowcase() {
             <p>
                 Kéo chuột để khám phá
             </p>
+            <p>
+                Nhấn bia đá để xem thông tin
+            </p>
         </div>
 
             <div
@@ -1587,89 +1590,85 @@ export default function ThapRuaShowcase() {
 
             <Dialog
     open={openPoster}
-    onClose={() =>
-        setOpenPoster(false)
-    }
-    maxWidth="lg"
+    onClose={() => setOpenPoster(false)}
+    maxWidth={false}
     PaperProps={{
         sx: {
-            background:
-                "rgba(3, 10, 15, 0.96)",
+            background: "transparent",
+            boxShadow: "none",
+            overflow: "hidden",
 
-            boxShadow:
-                "0 20px 80px rgba(0,0,0,0.8)",
+            margin: 0,
 
-            border:
-                "1px solid rgba(120, 200, 210, 0.18)",
+            width: "100vw",
+            height: "100vh",
 
-            borderRadius:
-                "4px",
-
-            overflow:
-                "hidden",
+            maxWidth: "100vw",
+            maxHeight: "100vh",
         },
     }}
 >
     <DialogContent
         sx={{
-            position:
-                "relative",
+            position: "relative",
 
-            padding:
-                "12px !important",
+            width: "100%",
+            height: "100%",
 
-            background:
-                "#02090d",
+            padding: "16px !important",
+
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+
+            overflow: "hidden",
+
+            boxSizing: "border-box",
         }}
     >
         <IconButton
-    onClick={() => setOpenPoster(false)}
-    sx={{
-        position: "absolute",
-        top: 18,
-        right: 18,
-        zIndex: 10,
+            onClick={() => setOpenPoster(false)}
+            sx={{
+                position: "absolute",
 
-        width: 42,
-        height: 42,
+                top: 12,
+                right: 12,
 
-        color: "#ffffff",
-        background: "rgba(0,0,0,0.55)",
+                zIndex: 10,
 
-        fontSize: "30px",
-        fontWeight: 300,
-        lineHeight: 1,
+                width: 42,
+                height: 42,
 
-        "&:hover": {
-            background: "rgba(0,0,0,0.8)",
-        },
-    }}
->
-    ×
-</IconButton>
+                color: "#fff",
+
+                background: "rgba(0,0,0,0.55)",
+
+                fontSize: "30px",
+
+                "&:hover": {
+                    background: "rgba(0,0,0,0.8)",
+                },
+            }}
+        >
+            ×
+        </IconButton>
 
         <img
             src="/Farm/ImageInfo/md_poster.png"
             alt="Thông tin Bia Tiến sĩ Văn Miếu - Quốc Tử Giám"
 
             style={{
-                display:
-                    "block",
+                display: "block",
 
-                width:
-                    "100%",
+                width: "auto",
+                height: "auto",
 
-                maxWidth:
-                    "1100px",
+                maxWidth: "100%",
+                maxHeight: "calc(100vh - 32px)",
 
-                maxHeight:
-                    "88vh",
+                objectFit: "contain",
 
-                objectFit:
-                    "contain",
-
-                margin:
-                    "0 auto",
+                margin: "0 auto",
             }}
         />
     </DialogContent>
